@@ -6,6 +6,8 @@ SPECIAL=
 SOURCE=$(filter-out $(SPECIAL),$(ALLSOURCE))
 TARGET=$(patsubst %.el,%.elc,$(SOURCE))
 
+VERSION=0.1
+
 DESTDIR=
 PREFIX=$(DESTDIR)/usr/local
 INFODIR=$(PREFIX)/info
@@ -38,6 +40,9 @@ install:
 	install -m 0644 etest.info $(INFODIR)/etest
 	for p in $(MAN1PAGES) ; do $(GZIP) -9c $$p > $(MAN1DIR)/$$p.gz ; done
 	$(INSTALLINFO) etest.info
+
+dist:
+	tar -C .. -cvzf etest-$(VERSION).tar.gz etest # fix "etest" assumption
 
 html: etest.html
 
