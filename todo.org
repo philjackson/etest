@@ -1,6 +1,6 @@
 * Etest
 ** ETest
-*** TODO Make the function which presents the results customisable.
+*** DONE Make the function which presents the results customisable.
 ** Result Mode
 *** TODO Use the regexps defined for font-locking
 *** Toggling

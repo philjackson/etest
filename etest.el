@@ -36,11 +36,6 @@
 ;;
 ;; (require 'etest)
 ;; 
-;; If you want graphical feed back then just load `etest-result-mode'
-;; like this:
-;; 
-;; (require 'etest-result-mode)
-;;
 ;; Valid examples of etest usage might be:
 ;;
 ;; Checking (+ 1 1) yeilds a non-nil result:
@@ -79,9 +74,8 @@
 
 (require 'etest-result-mode)
 
-(defvar etest-show-graphical-results t
-  "Choose whether a graphical representation of results should
-pop-up in another window.")
+(defvar etest-results-function 'etest-rm-refresh-buffer
+  "Function used to display the results of a run.")
 
 (defvar etest-candidates-plist
   '(eq      (etest-eq 2)
@@ -183,8 +177,8 @@ FUNC. Returns a test result."
   "Wrapper to `etest-run'. Will popup a window displaying the
 results of the run."
   `(let ((results (etest-run ',form)))
-     (when etest-show-graphical-results
-       (etest-rm-refresh-buffer results))
+     (when (fboundp etest-results-function)
+       (funcall etest-results-function results))
      results))
 
 (defun etest-run (form)
