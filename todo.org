@@ -1,0 +1,14 @@
+* Etest
+** ETest
+*** TODO Make the function which presents the results customisable.
+** Result Mode
+*** TODO Use the regexps defined for font-locking
+*** Toggling
+**** TODO [2/3] Toggle all comments
+     - [X] All comments
+     - [X] 'not ok' comments
+     - [ ] Keybindings
+**** TODO [0/1] Toggle all headlines
+     - [ ] With a numeric prefix for level
+**** TODO Toggle headlines with no failures
+**** TODO Rotate through the display of 'not ok' 'ok' and 'both'

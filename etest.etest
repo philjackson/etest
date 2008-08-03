@@ -1,0 +1,46 @@
+(etest
+ ("Etest"
+  ("Simple"
+   (ok 1)
+   (null nil)
+   (eq 1 1)
+   (eql 1.1 1.1)
+   (equal '(1 2) '(1 2))
+   (error (/ 1 0))
+   (noerror (+ 1 1))
+   (like "Hello" "^\\(H\\).+\\(o\\)$"))
+  ("Results"
+   ("ok results"  
+  (eres (ok nil) (:result nil))
+    (eres (ok t) (:result t))
+    (eres (ok (+ 1 1)) (:result t))
+    (eres (ok 0) (:result t)))
+   ("eq results"
+    (eres (eq 1 1) (:result t))
+    (eres (eq 1 2) (:result nil)))
+   ("equal results"
+    (eres (equal '(1 2) '(1 2)) (:result t))
+    (eres (equal '(1 2) '(3 4)) (:result nil)))
+   ("error"
+    (eres (error (/ 1 0)) (:result t))
+    (eres (error (/ 0 1)) (:result nil)))
+   ("noerror"
+    (eres (noerror (+ 1 1)) (:result t))
+    (eres (noerror (/ 1 0)) (:result nil)))
+  ("Documentation"
+   ("Defined by user"
+    (eres (ok 1 "Foo") (:doc "Foo"))
+    (eres (eq 1 1 "Another doc") (:doc "Another doc")))
+   ("Auto generated"
+    (eres (ok 1) (:doc "(ok 1)")
+          "Correct ok docs generated.")
+    (eres (eq 1 1) (:doc "(eq 1 1)")
+          "Correct eq docs generated.")))
+  ("Comments"
+   (eres (error (/ 1 0)) (:comments "got: '(arith-error)'")
+         "We get arith-error from a divide by 0")
+   (eres (ok "Something") (:comments "got: '\"Something\"'"))
+   (eres (eq 1 1) (:comments "both: '1'")
+         "eq hit")
+   (eres (eq 1 2) (:comments "one: '1'\ntwo: '2'")
+         "eq miss")))))

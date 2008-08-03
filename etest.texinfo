@@ -1,0 +1,395 @@
+\input texinfo   @c -*-texinfo-*-
+
+@setfilename etest.info
+@settitle Emacs Testing Framework
+
+@dircategory Emacs
+@direntry
+* ETest: (etest).           The Emacs Testing Framework
+@end direntry
+
+@copying
+Copyright @copyright{} 2008 Philip Jackson.
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A
+copy of the license is included in the section entitled "GNU Free
+Documentation License".
+@end quotation
+@end copying
+
+@titlepage
+@title ETest - The Emacs Testing Framework
+
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@ifhtml
+@contents
+@end ifhtml
+
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top ETest Manual 0.1
+
+@menu
+* Introduction::                Introduction to ETest.
+* Installation::                How to get emacs to wear ETest.
+
+* Usage::                       How to use ETest.
+* The results buffer::          Display of test results.
+* The Tests::                   Functions available for testing.
+@end menu
+@end ifnottex
+
+@node Introduction, Installation, Top, Top
+@chapter Introduction
+
+ETest (or etest, if you like) is the Emacs Testing Framework. It is a
+small modular system for writing unit tests in Emacs Lisp.
+
+At time of writing ETest consists of two files. @file{etest.el}
+provides the core test functionality. It defines the function
+(actually, macro) @code{etest} which is usually ones entrance into a
+test run. The file @file{etest-result-mode.el} adds functions that
+allow the visualisation of a run with syntax highlighting, folding and
+comment toggling.
+
+@node Installation
+@chapter Installation
+
+To install ETest use one of the following methods:
+
+@section Compiling ETest
+
+Once you've unpacked the tarball change into the new directory and run
+@code{make} if all goes well run @code{make install} (you may need
+escalated privileges for this step).
+
+@section Manual Installation
+
+If you don't want to byte-compile for some reason then you can just
+copy the @code{.el} files into a directory in your @var{load-path}.
+
+If you would rather add the unpacked library @emph{to} your load path
+then the following will work assuming the etest directory is in your
+home directory:
+
+@lisp
+(add-to-list 'load-path "~/etest")
+@end lisp
+
+@node Usage
+@chapter Usage
+
+First you must evaluate @code{(require 'etest)} then you can start
+using the @code{etest} macro.
+
+Using ETest is very simple. Once you have installed the modules then
+you can simply run your first test like this:
+
+@lisp
+(etest (ok 1))
+@end lisp
+@noindent
+
+This should pop up a results buffer showing you the outcome of the
+run. In this case all should be ok because, well, 1 is a pass
+according to the @code{ok} test.
+
+@node The results buffer
+@chapter The results buffer
+
+The results buffer is where you can see (and manipulate) the results
+of a test run in a human friendly format. It will always popup when
+etest is run and let you know how things went.
+
+@menu
+* Example output::              What the output looks like.
+* Bindings::                    What commands you have at your disposal.
+@end menu
+
+@node Example output
+@section Example output
+
+Given the hypothetical tests:
+
+@lisp
+(etest
+ ("Numeric comparisons"
+  ("Integers"
+   (ok (> 1 0) "one is more than 0")
+   (ok (< 1 0) "one is less than 0"))
+  ("Floats"
+   (ok (> 10 9.99))
+   (ok (< 1 -5.2) "one is less than 5.2"))))
+@end lisp
+@noindent
+
+Once run give us the following in the results buffer:
+
+@example
+* Numeric comparisons
+** Integers
+   ok ................ one is more than 0
+                       # got: 't'
+   not ok ............ one is less than 0
+                       # got: 'nil'
+** Floats
+   ok ................ (ok (> 10 9.99))
+                       # got: 't'
+   not ok ............ one is less than 5.2
+                       # got: 'nil'
+@end example
+@noindent
+
+All headings are foldable as are comments.
+
+@node Bindings
+@section Bindings
+
+@table @kbd
+@item q
+@findex bury-buffer
+Bury this results buffer.
+@item #
+@findex etest-rm-etest-rm-cycle-comments
+Shift the values in @code{etest-rm-comment-visibility-types} and use
+the @code{car} of that list to determine the visibility of comments.
+@item <tab>
+@findex etest-rm-toggle-headline
+Toggle the visibility of a heading or test comment.
+@end table
+
+@node The Tests
+@chapter The Tests
+
+Tests are always run within the @code{etest} form and usually always
+evaluate their arguments. Tests will always have a defined number of
+required arguments (for example @code{ok} requires one argument. Each
+test also allows for one optional argument which is a custom
+documentation string. If this argument is omitted then ETest will
+generate one in its place. So, for example, if you used
+@code{(etest (ok 1))} the doc string would be @code{"(ok 1)"} if you used
+@code{(etest (ok 1 "Foo"))} the doc string would be @code{"Foo"}.
+
+@menu
+* Test Structure::              Basic structure of tests.
+* Builtin Simple Tests::        Boolean checks.
+* Builtin Equality Tests::      Are two things similar?
+* Builtin Error Tests::         Test exception handling.
+* Builtin String Tests::        
+* Defining your own tests::     Extend ETest.
+@end menu
+
+@node Test Structure
+@section Test Structure
+
+Tests can be grouped within headings by simply using a string as the
+first element of a form like this:
+
+@lisp
+(etest
+ ("Simple tests"
+  (ok 1)))
+@end lisp
+@noindent
+
+You can nest headings to your hearts content.
+
+This will produce a set of results that follow the same hierarchical
+pattern as the tests themselves. For example the above produces the
+following structure:
+
+@lisp
+(("Simple tests"
+  (:result t :comments "got: '1'" :doc "(ok 1)")))
+@end lisp
+@noindent
+
+The output in the results buffer is:
+
+@example
+* Simple tests
+  ok ................. (ok 1)
+                       # got: '1'
+@end example
+
+@node Builtin Simple Tests
+@section Builtin Simple Tests
+
+These basic tests allow you, basically, to check if a value is either
+non-nil or nil.
+
+@subsection ok
+
+@code{ok} will only pass if its argument produces a non-nil result.
+
+@lisp
+(etest (ok (+ 1 1)))
+@end lisp
+@noindent
+
+@subsection null
+
+@code{null} will only pass if its argument produces a nil result.
+
+@lisp
+(etest (null nil))
+@end lisp
+@noindent
+
+@node Builtin Equality Tests
+@section Builtin Equality Tests
+
+The following functions map to their lisp counterparts and so don't
+really require much explanation. Evaluate each of the examples to
+watch them pass.
+
+Each take two forms which, post evaluation, are the objects to
+compare.
+
+@subsection eq
+
+@lisp
+(etest (eq 1 1))
+@end lisp
+@noindent
+
+@subsection eql
+
+@lisp
+(etest (eql 1.1 1.1))
+@end lisp
+@noindent
+
+@subsection equal
+
+@lisp
+(etest (equal '(1 2) '(1 2)))
+@end lisp
+@noindent
+
+@node Builtin Error Tests
+@section Builtin Error Tests
+
+These two functions each take one form.
+
+@subsection error
+
+This test will pass if an exception is raised. For example, cause a
+divide by zero error (@code{(arith-error)}):
+
+@lisp
+(etest (error (/ 1 0)))
+@end lisp
+@noindent
+
+@subsection noerror
+
+This test will pass if no exception is raised. For example, a valid
+division will not raise an error:
+
+@lisp
+(etest (noerror (/ 0 1)))
+@end lisp
+@noindent
+
+@node Builtin String Tests
+@section Builtin String Tests
+
+@subsection like
+
+@code{like} takes two arguments a string and a regexp to test it against:
+
+@lisp
+(etest (like "Hello" "^H\\(e\\)"))
+@end lisp
+@noindent
+
+Produces this in the results buffer:
+
+@example
+ ok .................. (like "Hello" "^H\\(e\\)")
+                       # searching: 'Hello'
+                       # match   1: 'e'
+@end example
+@noindent
+
+The grouping within the regular expression only affects the comments.
+
+@node Defining your own tests
+@section Defining your own tests
+
+Defining your own tests is fairly trivial and where ETest becomes
+really useful.
+
+Each test must return a plist that has @code{:result} and, optionally,
+@code{:comments} in it.
+
+@code{:result} represents whether the test passed or failed non-nil
+for a pass and nil for a fail.
+
+The optional @code{:comments} are newline separated strings that might
+help the user in their diagnosis of a problem. Comments should follow
+the conventions set by the 'builtin' tests using keywords such as
+'got:'.
+
+To have ETest recognise the test as valid the @code{deftest} function
+should be used. For example if I wanted to create a function that
+took two arguments and tested the first was numerically greater than
+the other I might do this:
+
+@lisp
+(defun etest-greater-than (one two)
+  (let* ((res (> one two)))
+    (list :result res
+          :comments (unless res
+                      (format "one: '%d'\ntwo: '%d'" one two)))))
+@end lisp
+@noindent
+
+We let emacs take care of type errors (and any other type of error)
+which is what all of the builtins do. Also it's worth noting that if
+you want your arguments evaling you have to do it yourself.
+
+Now we let ETest know this new function exists:
+
+@lisp
+(deftest '(> 2) 'etest-greater-than)
+@end lisp
+@noindent
+
+So, the new function will be called @code{>}, it will take two arguments
+and it calls maps to @code{etest-greater-than}.
+
+@lisp
+(deftest '(> 2) 'etest-greater-than)
+@end lisp
+@noindent
+
+Now you can mix @code{>} with other tests:
+
+@lisp
+(etest
+ (ok "something")
+ (> 1 2 "one is more than two"))
+@end lisp
+@noindent
+
+Which in the results buffer produces:
+
+@example
+ ok .................. (ok "something")
+                       # got: '"something"'
+ not ok .............. one is more than two
+                       # one: '1'
+                       # two: '2'
+@end example
+@noindent
+
+@bye
