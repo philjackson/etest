@@ -38,15 +38,15 @@ Documentation License".
 
 @menu
 * Introduction::                Introduction to ETest.
+* Fetching ETest::              How to download ETest.
 * Installation::                How to get emacs to wear ETest.
-
 * Usage::                       How to use ETest.
 * The results buffer::          Display of test results.
 * The Tests::                   Functions available for testing.
 @end menu
 @end ifnottex
 
-@node Introduction, Installation, Top, Top
+@node Introduction, Fetching ETest, Top, Top
 @chapter Introduction
 
 ETest (or etest, if you like) is the Emacs Testing Framework. It is a
@@ -59,14 +59,24 @@ test run. The file @file{etest-result-mode.el} adds functions that
 allow the visualisation of a run with syntax highlighting, folding and
 comment toggling.
 
-@node Installation
+@node Fetching ETest, Installation, Introduction, Top
+@chapter Fetching ETest
+
+At the time of writing you must download ETest using git:
+
+@code{git clone http://repo.or.cz/r/ETest.git etest}
+
+Though it will always be bleeding edge @code{master} should always be
+in a @emph{working} state.
+
+@node Installation, Usage, Fetching ETest, Top
 @chapter Installation
 
 To install ETest use one of the following methods:
 
 @section Compiling ETest
 
-Once you've unpacked the tarball change into the new directory and run
+Once you've fetched ETest change into the new directory and run
 @code{make} if all goes well run @code{make install} (you may need
 escalated privileges for this step).
 
@@ -83,7 +93,7 @@ home directory:
 (add-to-list 'load-path "~/etest")
 @end lisp
 
-@node Usage
+@node Usage, The results buffer, Installation, Top
 @chapter Usage
 
 First you must evaluate @code{(require 'etest)} then you can start
@@ -101,7 +111,7 @@ This should pop up a results buffer showing you the outcome of the
 run. In this case all should be ok because, well, 1 is a pass
 according to the @code{ok} test.
 
-@node The results buffer
+@node The results buffer, The Tests, Usage, Top
 @chapter The results buffer
 
 The results buffer is where you can see (and manipulate) the results
@@ -113,7 +123,7 @@ etest is run and let you know how things went.
 * Bindings::                    What commands you have at your disposal.
 @end menu
 
-@node Example output
+@node Example output, Bindings, The results buffer, The results buffer
 @section Example output
 
 Given the hypothetical tests:
@@ -149,7 +159,7 @@ Once run give us the following in the results buffer:
 
 All headings are foldable as are comments.
 
-@node Bindings
+@node Bindings,  , Example output, The results buffer
 @section Bindings
 
 @table @kbd
@@ -165,7 +175,7 @@ the @code{car} of that list to determine the visibility of comments.
 Toggle the visibility of a heading or test comment.
 @end table
 
-@node The Tests
+@node The Tests,  , The results buffer, Top
 @chapter The Tests
 
 Tests are always run within the @code{etest} form and usually always
@@ -186,7 +196,7 @@ generate one in its place. So, for example, if you used
 * Defining your own tests::     Extend ETest.
 @end menu
 
-@node Test Structure
+@node Test Structure, Builtin Simple Tests, The Tests, The Tests
 @section Test Structure
 
 Tests can be grouped within headings by simply using a string as the
@@ -219,7 +229,7 @@ The output in the results buffer is:
                        # got: '1'
 @end example
 
-@node Builtin Simple Tests
+@node Builtin Simple Tests, Builtin Equality Tests, Test Structure, The Tests
 @section Builtin Simple Tests
 
 These basic tests allow you, basically, to check if a value is either
@@ -243,7 +253,7 @@ non-nil or nil.
 @end lisp
 @noindent
 
-@node Builtin Equality Tests
+@node Builtin Equality Tests, Builtin Error Tests, Builtin Simple Tests, The Tests
 @section Builtin Equality Tests
 
 The following functions map to their lisp counterparts and so don't
@@ -274,7 +284,7 @@ compare.
 @end lisp
 @noindent
 
-@node Builtin Error Tests
+@node Builtin Error Tests, Builtin String Tests, Builtin Equality Tests, The Tests
 @section Builtin Error Tests
 
 These two functions each take one form.
@@ -299,7 +309,7 @@ division will not raise an error:
 @end lisp
 @noindent
 
-@node Builtin String Tests
+@node Builtin String Tests, Defining your own tests, Builtin Error Tests, The Tests
 @section Builtin String Tests
 
 @subsection like
@@ -322,7 +332,7 @@ Produces this in the results buffer:
 
 The grouping within the regular expression only affects the comments.
 
-@node Defining your own tests
+@node Defining your own tests,  , Builtin String Tests, The Tests
 @section Defining your own tests
 
 Defining your own tests is fairly trivial and where ETest becomes
