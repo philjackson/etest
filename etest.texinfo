@@ -54,7 +54,7 @@ small modular system for writing unit tests in Emacs Lisp.
 
 At time of writing ETest consists of two files. @file{etest.el}
 provides the core test functionality. It defines the function
-(actually, macro) @code{etest} which is usually ones entrance into a
+(actually, macro) @code{etest} which is usually one's entrance into a
 test run. The file @file{etest-result-mode.el} adds functions that
 allow the visualisation of a run with syntax highlighting, folding and
 comment toggling.
