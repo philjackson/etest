@@ -1,14 +1,15 @@
 * Etest
 ** ETest
-*** DONE Make the function which presents the results customisable.
+*** DONE Make the function which presents the results customisable.    :ARCHIVE:
 ** Result Mode
-*** DONE Use the regexps defined for font-locking
+*** DONE Use the regexps defined for font-locking                      :ARCHIVE:
 *** Toggling
-**** DONE [3/3] Toggle all comments
-     - [X] All comments
-     - [X] 'not ok' comments
-     - [X] Keybindings
+**** TODO Define proper faces
 **** TODO [0/1] Toggle all headlines
      - [ ] With a numeric prefix for level
 **** TODO Toggle headlines with no failures
-**** DONE Rotate through the display of 'not ok' 'ok' and 'both'
+**** DONE Rotate through the display of 'not ok' 'ok' and 'both'       :ARCHIVE:
+**** DONE [3/3] Toggle all comments                                    :ARCHIVE:
+     - [X] All comments
+     - [X] 'not ok' comments
+     - [X] Keybindings
