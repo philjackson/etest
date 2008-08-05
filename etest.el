@@ -162,7 +162,8 @@ FUNC. Returns a test result."
          (match nil)
          (re (eval re))
          (string (eval form))
-         (comments (concat "searching: '" string "'\n"))
+         (comments (format "haystack: '%s'\n  needle: '%s'"
+                           string re))
          (res (not (not (string-match re string))))
          (result (list :result res)))
     (while (setq match (match-string (setq i (1+ i)) string))
