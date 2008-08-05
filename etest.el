@@ -72,6 +72,7 @@
 ;; I can see if etests 'built-ins' are working.
 
 (require 'etest-result-mode)
+(require 'etest-execute)
 
 (defvar etest-results-function 'etest-rm-refresh-buffer
   "Function used to display the results of a run.")
