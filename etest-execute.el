@@ -35,22 +35,22 @@
 
 (defun etest-execute-get-test-file ()
   "Find a test file by first checking the (buffer local) variable
-`etest-file' then checking `etest-load-path' for a similarly
-named (to the buffer) file."
+`etest-file'. Then checking `etest-load-path' for a similarly
+named (to the buffer) file. Then looking in `default-directory'."
   (cond
     ((and etest-file
           (file-exists-p (expand-file-name etest-file)))
      (expand-file-name etest-file))
-    ((when etest-load-path
-       (catch 'found
-         (let ((name (concat
-                      (file-name-sans-extension
-                       (file-name-nondirectory buffer-file-name)) ".etest")))
-           (mapc '(lambda (d)
-                   (let ((name (expand-file-name (concat d name))))
-                     (when (file-exists-p name)
-                       (throw 'found name))))
-                 etest-load-path)))))))
+    ((catch 'found
+       (let ((etest-load-path (append etest-load-path (list default-directory)))
+             (name (concat
+                    (file-name-sans-extension
+                     (file-name-nondirectory buffer-file-name)) ".etest")))
+         (mapc '(lambda (d)
+                 (let ((name (expand-file-name (concat d name))))
+                   (when (file-exists-p name)
+                     (throw 'found name))))
+               etest-load-path))))))
                
 
 (defun etest-execute ()
