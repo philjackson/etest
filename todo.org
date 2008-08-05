@@ -4,10 +4,11 @@
 ** Result Mode
 *** DONE Use the regexps defined for font-locking                      :ARCHIVE:
 *** Toggling
-**** TODO Define proper faces
 **** TODO [0/1] Toggle all headlines
      - [ ] With a numeric prefix for level
 **** TODO Toggle headlines with no failures
+**** DONE Define proper faces                                          :ARCHIVE:
+     CLOSED: [2008-08-05 Tue 08:57]
 **** DONE Rotate through the display of 'not ok' 'ok' and 'both'       :ARCHIVE:
 **** DONE [3/3] Toggle all comments                                    :ARCHIVE:
      - [X] All comments
