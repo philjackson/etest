@@ -71,6 +71,10 @@
   "Defines how the result buffer should look when the user is
 toggling visibility states.")
 
+(defgroup etest nil
+  "Emacs Testing Framework"
+  :group 'lisp)
+
 (defun etest-rm-count-string-at-bol (string)
   "Count how many instances of STRING are at the start of the
 current line."
@@ -159,12 +163,36 @@ current line."
     (goto-char (point-min))
     (when (search-forward-regexp etest-rm-not-ok-re nil t)
       (goto-char (point-at-bol)))))
-    
+
+(defconst etest-rm-not-ok-face 'etest-rm-not-ok-face)
+(defface etest-rm-not-ok-face
+    '((default (:inherit font-lock-warning-face)))
+  "Face used for failing tests."
+  :group 'etest)
+
+(defconst etest-rm-ok-face 'etest-rm-ok-face)
+(defface etest-rm-ok-face
+    '((default (:inherit font-lock-variable-name-face)))
+  "Face used for passing tests."
+  :group 'etest)
+
+(defconst etest-rm-comment-face 'etest-rm-comment-face)
+(defface etest-rm-comment-face
+    '((default (:inherit font-lock-comment-face)))
+  "Face used for comments."
+  :group 'etes)
+
+(defconst etest-rm-heading-face 'etest-rm-heading-face)
+(defface etest-rm-heading-face
+    '((default (:inherit font-lock-keyword-face)))
+  "Face used for headings."
+  :group 'etes)
+
 (defconst etest-rm-font-lock-keywords
-  `((,etest-rm-ok-re     1 font-lock-keyword-face)
-    (,etest-rm-not-ok-re 1 font-lock-warning-face)
-    ("^ *\\(#.+\\)"      1 font-lock-comment-face)
-    ("^ *\\*+ \\(.+\\)"  1 font-lock-variable-name-face)))
+  `((,etest-rm-ok-re     1 etest-rm-ok-face)
+    (,etest-rm-not-ok-re 1 etest-rm-not-ok-face)
+    ("^ *\\(#.+\\)"      1 etest-rm-comment-face)
+    ("^ *\\*+ \\(.+\\)"  1 etest-rm-heading-face)))
 
 (defun etest-rm-toggle-headline ()
   "Toggle the visibility of a test category."
