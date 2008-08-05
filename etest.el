@@ -92,8 +92,7 @@ test . See `deftest' for details of how to modify this.")
   "Define a new test. DETAILS must be a list containing the name
 of the test and the argcount. FUNC is the actual function that
 will be run."
-  (let ((name (car details))
-        (argcount (cadr details)))
+  (destructuring-bind (name argcount) details
     (plist-put etest-candidates-plist
                name (list func argcount))))
 
