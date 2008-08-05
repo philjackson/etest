@@ -120,7 +120,11 @@ FUNC. Returns a test result."
 
 (defun etest-null (test)
   "Allows the use of `null' in a test."
-  (etest-ok `(null ,test)))
+  (let ((ret (eval test))
+        (result '()))
+    (setq result (plist-put result :result (null ret)))
+    (setq result (plist-put result :comments (format "got: '%S'" ret)))
+    result))
 
 (defun etest-eq (one two)
   "Allows the use of `eq' in a test."
@@ -162,8 +166,7 @@ FUNC. Returns a test result."
          (match nil)
          (re (eval re))
          (string (eval form))
-         (comments (format "haystack: '%s'\n  needle: '%s'"
-                           string re))
+         (comments (format "  needle: '%s'\nhaystack: '%s'" re string))
          (res (not (not (string-match re string))))
          (result (list :result res)))
     (while (setq match (match-string (setq i (1+ i)) string))
