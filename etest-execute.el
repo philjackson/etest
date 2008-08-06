@@ -40,18 +40,24 @@ named (to the buffer) file. Then looking in `default-directory'."
     ((and etest-file
           (file-exists-p (expand-file-name etest-file)))
      (expand-file-name etest-file))
-    ((catch 'found
-       (let ((etest-load-path (append etest-load-path (list default-directory)))
-             (name (concat
-                    (file-name-sans-extension
-                     (file-name-nondirectory buffer-file-name)) ".etest")))
-         (mapc '(lambda (d)
-                 (let ((name (expand-file-name (concat d "/" name))))
-                   (when (file-exists-p name)
-                     (throw 'found name))))
-               etest-load-path)
-         nil)))))
-               
+    ((and buffer-file-name
+          (catch 'found
+            (let ((etest-load-path (append etest-load-path
+                                           (list default-directory)))
+                  (name (concat
+                         (file-name-sans-extension
+                          (file-name-nondirectory buffer-file-name)) ".etest")))
+              (mapc '(lambda (d)
+                      (let ((name (expand-file-name (concat d "/" name))))
+                        (when (file-exists-p name)
+                          (throw 'found name))))
+                    etest-load-path)
+              nil))))))
+
+
+(defun etest-execute-all-in-cwd ()
+  (interactive))
+
 (defun etest-execute ()
   (interactive)
   (let ((file (etest-execute-get-test-file)))
