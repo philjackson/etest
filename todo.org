@@ -1,5 +1,7 @@
 * Etest
 ** ETest
+*** TODO Somesort of mock/stub intergration(?)
+    - Perhas bundle el-mock
 *** DONE Make the function which presents the results customisable.    :ARCHIVE:
 ** Result Mode
 *** DONE Use the regexps defined for font-locking                      :ARCHIVE:

@@ -29,9 +29,8 @@
  (defvar etest-file nil
   "The path of the etest file associated with the current buffer."))
 
-(make-variable-buffer-local
- (defvar etest-load-path "~/.etests"
-  "The path of the etest load path."))
+(defvar etest-load-path '("~/.etests")
+  "The path of the etest load path.")
 
 (defun etest-execute-get-test-file ()
   "Find a test file by first checking the (buffer local) variable
@@ -47,14 +46,17 @@ named (to the buffer) file. Then looking in `default-directory'."
                     (file-name-sans-extension
                      (file-name-nondirectory buffer-file-name)) ".etest")))
          (mapc '(lambda (d)
-                 (let ((name (expand-file-name (concat d name))))
+                 (let ((name (expand-file-name (concat d "/" name))))
                    (when (file-exists-p name)
                      (throw 'found name))))
-               etest-load-path))))))
+               etest-load-path)
+         nil)))))
                
-
 (defun etest-execute ()
-  (interactive))
-
+  (interactive)
+  (let ((file (etest-execute-get-test-file)))
+    (unless file
+      (error "No matching .etest file found"))
+    (load-file file)))
 
 (provide 'etest-execute)

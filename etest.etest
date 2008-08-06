@@ -1,16 +1,4 @@
 (etest
- ("Execute"
-  (like   (let ((etest-file "etest.etest"))
-            (etest-execute-get-test-file))
-          (concat default-directory etest-file)
-          "etest-file being set returns a good path")
-  (like (let ((etest-file nil)
-              (etest-load-path (list default-directory)))
-          (etest-execute-get-test-file))
-        "/etest.etest$"
-        "Load path being set returns correct value")))
-
-(etest
  ("Etest"
   ("Simple"
    (ok 1)
