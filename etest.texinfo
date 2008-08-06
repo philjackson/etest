@@ -111,6 +111,34 @@ This should pop up a results buffer showing you the outcome of the
 run. In this case all should be ok because, well, 1 is a pass
 according to the @code{ok} test.
 
+@menu
+* Example working practice::    How one might use etest.
+@end menu
+
+@node Example working practice
+@section Example working practice
+
+Generally (at least the way I work) is to have a @code{.etest} file
+which matches all but the extension of the filename of the file I am
+to test. So if I were testing a file called @code{find-cmd.el} I would
+write my tests in a file called @code{find-cmd.etest} (in the same
+directory as @code{find-cmd.el}) and then when I hit @kbd{C-c t} (in
+@code{emacs-lisp-mode}) the run would happen and the results pop up in
+their normal fashion.
+
+Thanks to @file{etest-execute.el} there are several options for the
+location of an etest file (one at a time). In order of execution they
+are:
+
+1. The buffer local variable @code{etest-file} is set to the filename
+of the etest file.
+
+2. A matching etest file is in the directories listed in
+@code{etest-load-path}.
+
+3. A matching etest file is in the current working directory
+(@code{default-directory}).
+
 @node The results buffer, The Tests, Usage, Top
 @chapter The results buffer
 
@@ -192,7 +220,7 @@ generate one in its place. So, for example, if you used
 * Builtin Simple Tests::        Boolean checks.
 * Builtin Equality Tests::      Are two things similar?
 * Builtin Error Tests::         Test exception handling.
-* Builtin String Tests::        
+* Builtin String Tests::        Check a string matches an RE.
 * Defining your own tests::     Extend ETest.
 @end menu
 
