@@ -1,5 +1,8 @@
 * Etest
 ** ETest
+*** TODO Attach meta data
+    - Pass/fail rate
+    - How long the run took
 *** TODO Somesort of mock/stub intergration(?)
     - Perhas bundle el-mock
 *** DONE Make the function which presents the results customisable.    :ARCHIVE:
