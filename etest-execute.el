@@ -34,6 +34,11 @@
 (defvar etest-load-path '("~/.etests")
   "The path of the etest load path.")
 
+;; The only keybinding we make... hopefully
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c t") 'etest-execute)))
+
 (defun etest-execute-get-test-file ()
   "Find a test file by first checking the (buffer local) variable
 `etest-file'. Then checking `etest-load-path' for a similarly
