@@ -23,7 +23,9 @@
 
 ;;; Commentary:
 
-;; This file will aid the execution of a test run.
+;; This file will aid the execution of a test run. From any buffer
+;; simply run `etest-execute' and it will do its best to find a valid
+;; etest file and load it.
 
 (make-variable-buffer-local
  (defvar etest-file nil
@@ -54,11 +56,9 @@ named (to the buffer) file. Then looking in `default-directory'."
                     etest-load-path)
               nil))))))
 
-
-(defun etest-execute-all-in-cwd ()
-  (interactive))
-
 (defun etest-execute ()
+  "Execute a run for the current file using
+`etest-execute-get-test-file'."
   (interactive)
   (let ((file (etest-execute-get-test-file)))
     (unless file
