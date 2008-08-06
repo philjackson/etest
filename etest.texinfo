@@ -139,6 +139,12 @@ of the etest file.
 3. A matching etest file is in the current working directory
 (@code{default-directory}).
 
+At the moment it's impossible to have two etest structures defined in
+one file @emph{and} see the results in one results buffer (at least in
+the result mode that is bundled with ETest) as an @code{erase-buffer}
+is executed (effectively) for each invocation of the @code{etest}
+macro.
+
 @node The results buffer, The Tests, Usage, Top
 @chapter The results buffer
 
