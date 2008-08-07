@@ -93,6 +93,24 @@ home directory:
 (add-to-list 'load-path "~/etest")
 @end lisp
 
+If you want to run tests from a lisp buffer add the following to your
+initialistation file:
+
+@lisp
+;; The only keybinding we make... hopefully
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c t") 'etest-execute)))
+@end lisp
+
+And to have @code{.etest} files load @code{emacs-lisp-mode} put the
+following into your initialistation file:
+
+@lisp
+;; Load lisp mode when editing an etest file
+(add-to-list 'auto-mode-alist '("\\.etest$" . emacs-lisp-mode))
+@end lisp
+
 @node Usage, The results buffer, Installation, Top
 @chapter Usage
 

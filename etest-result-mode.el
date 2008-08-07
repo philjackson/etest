@@ -57,6 +57,7 @@
         (interactive)
         (etest-rm-refresh-buffer current-results)))
     (define-key m (kbd "#") 'etest-rm-cycle-comments)
+    (define-key m (kbd "TAB") 'etest-rm-toggle-headline)
     (define-key m (kbd "<tab>") 'etest-rm-toggle-headline)
     m))
 
