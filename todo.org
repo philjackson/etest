@@ -1,5 +1,6 @@
 * Etest
 ** ETest
+*** TODO Allow skip/todo keywords
 *** TODO Attach meta data
     - Pass/fail rate
     - How long the run took

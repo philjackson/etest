@@ -179,12 +179,16 @@ FUNC. Returns a test result."
 (defmacro etest (&rest form)
   "Wrapper to `etest-run'. Will popup a window displaying the
 results of the run."
-  `(let ((results (etest-run ',form)))
+  `(let* ((stats (list :pass 0
+                       :fail 0
+                       :timestart (current-time)
+                       :timefinish 0))
+          (results (etest-run ',form stats)))
      (when (fboundp etest-results-function)
        (funcall etest-results-function results))
      results))
 
-(defun etest-run (form)
+(defun etest-run (form &optional stats)
   "This function does all of the work where actually running the
 tests is concerned. Takes a valid etest form and will return a
 similarly shaped set of results. "
@@ -193,7 +197,7 @@ similarly shaped set of results. "
      (let ((name (car test)))
        (cond
          ((stringp name)
-          (cons name (etest-run (cdr test))))
+          (cons name (etest-run (cdr test) stats)))
          ((symbolp name)
           (let ((cand (car (plist-get etest-candidates-plist name)))
                 (args (cdr test))
@@ -209,9 +213,17 @@ similarly shaped set of results. "
                       (setq doc (car (last args)))
                       (setq args (delq doc args)))
                     (setq doc (prin1-to-string test))))
-            (plist-put (apply cand args) :doc doc))))))
+            (let ((results (apply cand args)))
+              (plist-put results :doc doc)
+              (when stats
+                (etest-stats-update results stats))
+              results))))))
    form))
 
+(defun etest-stats-update (result stats)
+  (let ((type (if (plist-get result :result) :pass :fail)))
+    (plist-put stats type (1+ (plist-get stats type)))))
+      
 ;; This is defined so that etest can test itself
 (defun etest-test-tests (test result)
   "This test is used to test ETest itself. TEST is the test to be
