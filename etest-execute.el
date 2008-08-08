@@ -39,8 +39,7 @@
 `etest-file'. Then checking `etest-load-path' for a similarly
 named (to the buffer) file. Then looking in `default-directory'."
   (cond
-    ((and etest-file
-          (file-exists-p (expand-file-name etest-file)))
+    ((and etest-file (file-exists-p (expand-file-name etest-file)))
      (expand-file-name etest-file))
     ((and buffer-file-name
           (catch 'found

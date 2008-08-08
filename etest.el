@@ -166,7 +166,7 @@ FUNC. Returns a test result."
          (match nil)
          (re (eval re))
          (string (eval form))
-         (comments (format "  needle: '%s'\nhaystack: '%s'" re string))
+         (comments (format "  needle: '%s'\nhaystack: '%s'\n" re string))
          (res (not (not (string-match re string))))
          (result (list :result res)))
     (while (setq match (match-string (setq i (1+ i)) string))
@@ -179,52 +179,53 @@ FUNC. Returns a test result."
 (defmacro etest (&rest form)
   "Wrapper to `etest-run'. Will popup a window displaying the
 results of the run."
-  `(let* ((stats (list :pass 0
-                       :fail 0
-                       :timestart (current-time)
-                       :timefinish 0))
-          (results (etest-run ',form stats)))
+  `(let* ((meta-info (list :pass 0
+                           :fail 0
+                           :timestart (current-time)
+                           :timefinish 0))
+          (results (etest-run ',form meta-info)))
+     (plist-put meta-info :timefinish (current-time))
      (when (fboundp etest-results-function)
-       (funcall etest-results-function results stats))
+       (funcall etest-results-function results meta-info))
      results))
 
-(defun etest-run (form &optional stats)
+(defun etest-run (form &optional meta-info)
   "This function does all of the work where actually running the
 tests is concerned. Takes a valid etest form and will return a
 similarly shaped set of results. "
-  (let ((all (mapcar
-              '(lambda (test)
-                (let ((name (car test)))
-                  (cond
-                    ((stringp name)
-                     (cons name (etest-run (cdr test) stats)))
-                    ((symbolp name)
-                     (let ((cand (car (plist-get etest-candidates-plist name)))
-                           (args (cdr test))
-                           (argcount (cadr (plist-get etest-candidates-plist name)))
-                           (doc nil))
-                       (unless cand
-                         (error "'%s' is not a valid name type" name))
-                       (if (< (length args) argcount)
-                           (error "%s needs %d arguments" cand argcount)
-                           (if (and (eq (length args) (1+ argcount))
-                                    (stringp (car (last args))))
-                               (progn
-                                 (setq doc (car (last args)))
-                                 (setq args (delq doc args)))
-                               (setq doc (prin1-to-string test))))
-                       (let ((results (apply cand args)))
-                         (plist-put results :doc doc)
-                         (when stats
-                           (etest-stats-update results stats))
-                         results))))))
-              form)))
-    (plist-put stats :timefinish (current-time))
-    all))
+  (mapcar
+   '(lambda (test)
+     (let ((name (car test)))
+       (cond
+         ((stringp name)
+          (cons name (etest-run (cdr test) meta-info)))
+         ((symbolp name)
+          (let ((cand (car (plist-get etest-candidates-plist name)))
+                (args (cdr test))
+                (argcount (cadr (plist-get etest-candidates-plist name)))
+                (doc nil))
+            (unless cand
+              (error "'%s' is not a valid name type" name))
+            (if (< (length args) argcount)
+                (error "%s needs %d arguments" cand argcount)
+                (if (and (eq (length args) (1+ argcount))
+                         (stringp (car (last args))))
+                    (progn
+                      (setq doc (car (last args)))
+                      (setq args (delq doc args)))
+                    (setq doc (prin1-to-string test))))
+            (let ((results (apply cand args)))
+              (plist-put results :doc doc)
+              (when meta-info
+                (etest-meta-info-update-pass-fail results meta-info))
+              results))))))
+   form))
 
-(defun etest-stats-update (result stats)
+(defun etest-meta-info-update-pass-fail (result meta-info)
+  "Update the pass/fail item in the meta-info plist based on the
+resuls in RESULT."
   (let ((type (if (plist-get result :result) :pass :fail)))
-    (plist-put stats type (1+ (plist-get stats type)))))
+    (plist-put meta-info type (1+ (plist-get meta-info type)))))
       
 ;; This is defined so that etest can test itself
 (defun etest-test-tests (test result)

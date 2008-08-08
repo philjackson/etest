@@ -49,13 +49,19 @@
           "\\)")
   "Regexp that will match a test status.")
 
+(defvar etest-meta-info-re
+  (concat "[[:blank:]]"
+          (regexp-opt '("total"
+                        "pass"
+                        "fail"
+                        "started"
+                        "finished") t)
+          "..\\{2,\\}[[:blank:]]+\\(.+\\)$")
+  "Regexp that will match the stats at the bottom of the buffer.")
+
 (defvar etest-rm-map
   (let ((m (make-keymap)))
     (define-key m (kbd "q") 'bury-buffer)
-    (define-key m (kbd "g")
-      '(lambda ()
-        (interactive)
-        (etest-rm-refresh-buffer current-results)))
     (define-key m (kbd "#") 'etest-rm-cycle-comments)
     (define-key m (kbd "TAB") 'etest-rm-toggle-headline)
     (define-key m (kbd "<tab>") 'etest-rm-toggle-headline)
@@ -98,17 +104,20 @@ current line."
           (etest-rm-count-string-at-bol "*"))))
 
 ;;;###autoload
-(defun etest-result-mode (&optional results)
+(defun etest-result-mode (&optional results meta-info)
   "Mode used to display test results."
   (interactive)
   (kill-all-local-variables)
   (setq buffer-read-only t)
   (outline-minor-mode)
   (set (make-local-variable 'outline-regexp)
-       (concat "\\(\\*\\|" etest-status-re "\\)"))
+       (concat "\\(\\*\\|"
+               etest-status-re "\\|"
+               etest-meta-info-re "\\)"))
   (set (make-local-variable 'outline-level)
        'etest-rm-outline-level)
   (set (make-local-variable 'current-results) results)
+  (set (make-local-variable 'current-meta-info) meta-info)
   (setq major-mode 'etest-result-mode)
   (setq mode-name "etest-result")
   (set (make-local-variable 'font-lock-defaults)
@@ -153,15 +162,38 @@ current line."
     (when (cdr results)
       (etest-rm-pretty-print-results (cdr results) level))))
 
-(defun etest-rm-refresh-buffer (results stats)
+(defun etest-rm-pretty-print-meta-info (meta-info)
+  "Insert a few details about the pass rate."
+  (let* ((pass (float (plist-get meta-info :pass)))
+         (fail (float (plist-get meta-info :fail)))
+         (total (+ pass fail))
+         (start (plist-get meta-info :timestart))
+         (finish (plist-get meta-info :timefinish)))
+    (insert (format (concat "\n total ..... %3d\n"
+                            " pass ...... %3d (%3d%%)\n"
+                            " fail ...... %3d (%3d%%)")
+                    total
+                    pass
+                    (* (/ pass total) 100)
+                    fail
+                    (* (/ fail total) 100)))
+    (insert (format (concat "\n started ... %s\n"
+                            " finished .. %s (%f seconds)\n")
+                    (current-time-string start)
+                    (current-time-string finish)
+                    (- (float-time finish) (float-time start))))))
+
+
+(defun etest-rm-refresh-buffer (results &optional meta-info)
   "Refresh the results buffer using the cached test results."
   (save-selected-window
     (switch-to-buffer-other-window (get-buffer-create "*etest*"))
     (setq buffer-read-only nil)
     (erase-buffer)
-    (insert (pp stats))
     (etest-rm-pretty-print-results results 0)
-    (etest-result-mode results)
+    (when meta-info
+      (etest-rm-pretty-print-meta-info meta-info))
+    (etest-result-mode results meta-info)
     (goto-char (point-min))
     (when (search-forward-regexp etest-rm-not-ok-re nil t)
       (goto-char (point-at-bol)))))
@@ -193,6 +225,7 @@ current line."
 (defconst etest-rm-font-lock-keywords
   `((,etest-rm-ok-re     1 etest-rm-ok-face)
     (,etest-rm-not-ok-re 1 etest-rm-not-ok-face)
+    (,etest-meta-info-re 1 etest-rm-heading-face)
     ("^ *\\(#.+\\)"      1 etest-rm-comment-face)
     ("^ *\\*+ \\(.+\\)"  1 etest-rm-heading-face)))
 
@@ -216,7 +249,7 @@ comments."
         (concatenate 'list
                      (cdr etest-rm-comment-visibility-types)
                      (list (car etest-rm-comment-visibility-types))))
-  (etest-rm-refresh-buffer current-results)
+  (etest-rm-refresh-buffer current-results current-meta-info)
   (message (format "%S" (car etest-rm-comment-visibility-types))))
 
 (defmacro etest-with-comments (&rest body)
