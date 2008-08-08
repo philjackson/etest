@@ -185,40 +185,42 @@ results of the run."
                        :timefinish 0))
           (results (etest-run ',form stats)))
      (when (fboundp etest-results-function)
-       (funcall etest-results-function results))
+       (funcall etest-results-function results stats))
      results))
 
 (defun etest-run (form &optional stats)
   "This function does all of the work where actually running the
 tests is concerned. Takes a valid etest form and will return a
 similarly shaped set of results. "
-  (mapcar
-   '(lambda (test)
-     (let ((name (car test)))
-       (cond
-         ((stringp name)
-          (cons name (etest-run (cdr test) stats)))
-         ((symbolp name)
-          (let ((cand (car (plist-get etest-candidates-plist name)))
-                (args (cdr test))
-                (argcount (cadr (plist-get etest-candidates-plist name)))
-                (doc nil))
-            (unless cand
-              (error "'%s' is not a valid name type" name))
-            (if (< (length args) argcount)
-                (error "%s needs %d arguments" cand argcount)
-                (if (and (eq (length args) (1+ argcount))
-                         (stringp (car (last args))))
-                    (progn
-                      (setq doc (car (last args)))
-                      (setq args (delq doc args)))
-                    (setq doc (prin1-to-string test))))
-            (let ((results (apply cand args)))
-              (plist-put results :doc doc)
-              (when stats
-                (etest-stats-update results stats))
-              results))))))
-   form))
+  (let ((all (mapcar
+              '(lambda (test)
+                (let ((name (car test)))
+                  (cond
+                    ((stringp name)
+                     (cons name (etest-run (cdr test) stats)))
+                    ((symbolp name)
+                     (let ((cand (car (plist-get etest-candidates-plist name)))
+                           (args (cdr test))
+                           (argcount (cadr (plist-get etest-candidates-plist name)))
+                           (doc nil))
+                       (unless cand
+                         (error "'%s' is not a valid name type" name))
+                       (if (< (length args) argcount)
+                           (error "%s needs %d arguments" cand argcount)
+                           (if (and (eq (length args) (1+ argcount))
+                                    (stringp (car (last args))))
+                               (progn
+                                 (setq doc (car (last args)))
+                                 (setq args (delq doc args)))
+                               (setq doc (prin1-to-string test))))
+                       (let ((results (apply cand args)))
+                         (plist-put results :doc doc)
+                         (when stats
+                           (etest-stats-update results stats))
+                         results))))))
+              form)))
+    (plist-put stats :timefinish (current-time))
+    all))
 
 (defun etest-stats-update (result stats)
   (let ((type (if (plist-get result :result) :pass :fail)))

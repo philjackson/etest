@@ -153,12 +153,13 @@ current line."
     (when (cdr results)
       (etest-rm-pretty-print-results (cdr results) level))))
 
-(defun etest-rm-refresh-buffer (results)
+(defun etest-rm-refresh-buffer (results stats)
   "Refresh the results buffer using the cached test results."
   (save-selected-window
     (switch-to-buffer-other-window (get-buffer-create "*etest*"))
     (setq buffer-read-only nil)
     (erase-buffer)
+    (insert (pp stats))
     (etest-rm-pretty-print-results results 0)
     (etest-result-mode results)
     (goto-char (point-min))
