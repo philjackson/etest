@@ -170,9 +170,9 @@ current line."
          (total (+ pass fail))
          (start (plist-get meta-info :timestart))
          (finish (plist-get meta-info :timefinish)))
-    (insert (format (concat "\n total ..... %3d\n"
-                            " pass ...... %3d (%3d%%)\n"
-                            " fail ...... %3d (%3d%%)")
+    (insert (format (concat "\n total ..... %d\n"
+                            " pass ...... %-3d (%3d%%)\n"
+                            " fail ...... %-3d (%3d%%)")
                     total
                     pass
                     (* (/ pass total) 100)
