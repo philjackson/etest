@@ -32,6 +32,7 @@
 ;; calm down byte-compiler, you can have this one...
 (eval-when-compile
   (defvar current-results)
+  (defvar current-meta-info)
   (require 'cl))
 
 ;; The grouping of the status is for convenience and use by the
