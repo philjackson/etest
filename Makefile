@@ -42,7 +42,7 @@ install:
 	$(INSTALLINFO) etest.info
 
 dist:
-	tar -C .. -cvzf etest-$(VERSION).tar.gz etest # fix "etest" assumption
+	cwd=`pwd` tar -C .. -cvzf etest-$(VERSION).tar.gz "$cwd"
 
 html: etest.html
 
