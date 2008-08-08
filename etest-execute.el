@@ -44,7 +44,8 @@ named (to the buffer) file. Then looking in `default-directory'."
     ((and buffer-file-name
           (catch 'found
             (let ((etest-load-path (append etest-load-path
-                                           (list default-directory)))
+                                           (list default-directory)
+                                           load-path))
                   (name (concat
                          (file-name-sans-extension
                           (file-name-nondirectory buffer-file-name)) ".etest")))
