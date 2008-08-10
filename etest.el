@@ -249,7 +249,10 @@ like to compare. See the file etest.etest for example usage."
          (res-items '(:result :comments :doc :todo))
          (my-comments (mapconcat
                        '(lambda (item)
-                         (format "%9S %S" item (plist-get testres item)))
+                         (replace-regexp-in-string "\n" " "
+                          (format "%9S %S"
+                           item
+                           (plist-get testres item))))
                        res-items
                        "\n")))
     (dolist (sym res-items)
