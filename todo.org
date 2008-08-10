@@ -1,7 +1,8 @@
 * Etest
 ** ETest
 *** TODO Allow skip/todo keywords
-*** TODO Attach meta data
+*** DONE Attach meta data
+    CLOSED: [2008-08-10 Sun 17:30]
     - Pass/fail rate
     - How long the run took
 *** TODO Somesort of mock/stub intergration(?)
