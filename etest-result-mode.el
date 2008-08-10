@@ -44,11 +44,18 @@
 (defvar etest-rm-ok-re "^ *\\(ok\\) \\.\\."
   "Regexp that will match good test status.")
 
+(defvar etest-rm-todo-re "^ *\\(todo\\) \\.\\."
+  "Regexp that will match good test status.")
+
+(defvar etest-rm-skip-re "^ *\\(skip\\) \\.\\."
+  "Regexp that will match good test status.")
+
 (defvar etest-status-re
   (concat "\\(" etest-rm-not-ok-re
           "\\|" etest-rm-ok-re
-          "\\)")
-  "Regexp that will match a test status.")
+          "\\|" etest-rm-todo-re
+          "\\|" etest-rm-skip-re "\\)")
+      "Regexp that will match a test status.")
 
 (defvar etest-meta-info-re
   (concat "[[:blank:]]"
@@ -132,7 +139,12 @@ current line."
   (let ((returned (plist-get result :result)))
     (let* ((doc (plist-get result :doc))
            (comments (plist-get result :comments))
-           (prefix (if returned "ok" "not ok")))
+           (prefix (if returned
+                       (cond
+                         ((plist-get result :skip) "skip")
+                         ((plist-get result :todo) "todo")
+                         (t "ok"))
+                       "not ok")))
       (insert (concat " " prefix " "))
       (insert-char ?\. (- 18 (length prefix) level))
       (insert ".. ")
@@ -226,6 +238,8 @@ current line."
 (defconst etest-rm-font-lock-keywords
   `((,etest-rm-ok-re     1 etest-rm-ok-face)
     (,etest-rm-not-ok-re 1 etest-rm-not-ok-face)
+    (,etest-rm-todo-re   1 etest-rm-not-ok-face)
+    (,etest-rm-skip-re   1 etest-rm-not-ok-face)
     (,etest-meta-info-re 1 etest-rm-heading-face)
     ("^ *\\(#.+\\)"      1 etest-rm-comment-face)
     ("^ *\\*+ \\(.+\\)"  1 etest-rm-heading-face)))

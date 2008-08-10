@@ -86,7 +86,8 @@
     equal   (etest-equal 2)
     eql     (etest-eql 2)
     ok      (etest-ok 1)
-    skip    (etest-skip 1))
+    skip    (etest-skip 1)
+    todo    (etest-todo 1))
   "Plist of test candidates where PROP is the name of the new
 test . See `deftest' for details of how to modify this.")
 
@@ -98,13 +99,24 @@ will be run."
     (plist-put etest-candidates-plist
                name (list func argcount))))
 
+(defun etest-skip-todo (form keyword)
+  "Return an etest result set with :result set to t. Set
+KEYWORD (usually todo or skip) to t and comments to the result."
+  (let ((res (prin1-to-string
+              (condition-case err (car (etest-run (list form)))
+              (error
+               err)))))
+    (list :result t
+          :comments (concat "got: " (replace-regexp-in-string "\n" "" res))
+          keyword t)))
+
 (defun etest-skip (form)
-  (let ((my-comments "")
-        (test-result '())
-        (val (condition-case err (car (etest-run (list form)))
-               (error
-                (format "error: %S" err)))))
-    (list :result t :comments val :skip t)))
+  "Call `etest-skip-todo' with the keyword being :skip"
+  (etest-skip-todo form :skip))
+
+(defun etest-todo (form)
+  "Call `etest-skip-todo' with the keyword being :todo"
+  (etest-skip-todo form :todo))
 
 (defun etest-ok (test)
   "Simply eval TEST and pass if the result is non-nil."
