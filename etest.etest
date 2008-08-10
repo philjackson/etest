@@ -11,7 +11,7 @@
    (like "Hello" "^\\(H\\).+\\(o\\)$"))
   ("Results"
    ("ok results"  
-  (eres (ok nil) (:result nil))
+    (eres (ok nil) (:result nil))
     (eres (ok t) (:result t))
     (eres (ok (+ 1 1)) (:result t))
     (eres (ok 0) (:result t)))
@@ -26,7 +26,9 @@
     (eres (error (/ 0 1)) (:result nil)))
    ("noerror"
     (eres (noerror (+ 1 1)) (:result t))
-    (eres (noerror (/ 1 0)) (:result nil)))
+    (eres (noerror (/ 1 0)) (:result nil))))
+  ("Skip"
+   (eres (skip (ok (/ 0 0))) (:skip t)))
   ("Documentation"
    ("Defined by user"
     (eres (ok 1 "Foo") (:doc "Foo"))
@@ -43,4 +45,4 @@
    (eres (eq 1 1) (:comments "both: '1'")
          "eq hit")
    (eres (eq 1 2) (:comments "one: '1'\ntwo: '2'")
-         "eq miss")))))
+         "eq miss"))))

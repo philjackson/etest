@@ -85,7 +85,8 @@
     null    (etest-null 1)
     equal   (etest-equal 2)
     eql     (etest-eql 2)
-    ok      (etest-ok 1))
+    ok      (etest-ok 1)
+    skip    (etest-skip 1))
   "Plist of test candidates where PROP is the name of the new
 test . See `deftest' for details of how to modify this.")
 
@@ -96,6 +97,14 @@ will be run."
   (destructuring-bind (name argcount) details
     (plist-put etest-candidates-plist
                name (list func argcount))))
+
+(defun etest-skip (form)
+  (let ((my-comments "")
+        (test-result '())
+        (val (condition-case err (car (etest-run (list form)))
+               (error
+                (format "error: %S" err)))))
+    (list :result t :comments val :skip t)))
 
 (defun etest-ok (test)
   "Simply eval TEST and pass if the result is non-nil."
@@ -166,7 +175,7 @@ FUNC. Returns a test result."
          (match nil)
          (re (eval re))
          (string (eval form))
-         (comments (format "  needle: '%s'\nhaystack: '%s'\n" re string))
+         (comments (format "   needle: '%s'\n haystack: '%s'\n" re string))
          (res (not (not (string-match re string))))
          (result (list :result res)))
     (while (setq match (match-string (setq i (1+ i)) string))
@@ -232,21 +241,20 @@ resuls in RESULT."
   "This test is used to test ETest itself. TEST is the test to be
 run (in ETest syntax) and RESULT is a plist of items you would
 like to compare. See the file etest.etest for example usage."
-  (let ((testres (car (etest-run (list test))))
-        (my-res t)
-        (my-comments ""))
-    (when (null (plist-get testres :result))
-      (setq my-comments "note: test result was nil\n"))
-    (dolist (sym '(:result :comments :doc))
+  (let* ((testres (car (etest-run (list test))))
+         (my-res t)
+         (res-items '(:result :comments :doc :skip :todo))
+         (my-comments (mapconcat
+                       '(lambda (item)
+                         (format "%9S %S" item (plist-get testres item)))
+                       res-items
+                       "\n")))
+    (dolist (sym res-items)
       (let ((testval (plist-get testres sym))
             (resultval (plist-get result sym)))
         (when (and (plist-member result sym)
                    (not (equal testval resultval)))
-          (setq my-res nil)
-          (setq my-comments
-                (concat my-comments
-                        (format "got: %S from '%S'\n"
-                                resultval sym))))))
+          (setq my-res nil))))
     (list :result my-res :comments my-comments)))
 
 ;; Make `etest-test-tests' available
