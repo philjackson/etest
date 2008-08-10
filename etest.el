@@ -74,6 +74,8 @@
 (require 'etest-result-mode)
 (require 'etest-execute)
 
+(eval-when-compile (require 'cl))
+
 (defvar etest-results-function 'etest-rm-refresh-buffer
   "Function used to display the results of a run.")
 

@@ -474,6 +474,6 @@ result (@code{:todo}) with the value @code{t}.
 
 The result mode takes account of this by highlighting todoed tests and
 showing you what happened when ETest actually ran the test (catching
-all exceptions).
+any exceptions so as not to stop a run).
 
 @bye
