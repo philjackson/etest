@@ -133,7 +133,7 @@ according to the @code{ok} test.
 * Example working practice::    How one might use etest.
 @end menu
 
-@node Example working practice
+@node Example working practice,  , Usage, Usage
 @section Example working practice
 
 Generally (at least the way I work) is to have a @code{.etest} file
@@ -249,6 +249,7 @@ generate one in its place. So, for example, if you used
 * Builtin Error Tests::         Test exception handling.
 * Builtin String Tests::        Check a string matches an RE.
 * Defining your own tests::     Extend ETest.
+* Leaving tests until later::   Using todo and skip.
 @end menu
 
 @node Test Structure, Builtin Simple Tests, The Tests, The Tests
@@ -387,7 +388,7 @@ Produces this in the results buffer:
 
 The grouping within the regular expression only affects the comments.
 
-@node Defining your own tests,  , Builtin String Tests, The Tests
+@node Defining your own tests, Leaving tests until later, Builtin String Tests, The Tests
 @section Defining your own tests
 
 Defining your own tests is fairly trivial and where ETest becomes
@@ -456,5 +457,37 @@ Which in the results buffer produces:
                        # two: '2'
 @end example
 @noindent
+
+@node Leaving tests until later,  , Defining your own tests, The Tests
+@section Leaving tests until later
+
+It is possible to mark tests as skip or todo. Both essensially do the
+same thing.
+
+@subsection Todo tests
+
+If you wrap a test in a todo keyword:
+
+@lisp
+(todo (ok nil))
+@end lisp
+
+Then the test will appear to pass but with an extra keyword in the
+result (@code{:todo}) with the value @code{t}.
+
+The result mode takes account of this by highlighting todoed tests.
+
+@subsection Skip tests
+
+If you wrap a test in a todo keyword:
+
+@lisp
+(skip (ok nil))
+@end lisp
+
+Then the test will appear to pass but with an extra keyword in the
+result (@code{:skip}) with the value @code{t}.
+
+The result mode takes account of this by highlighting skipped tests.
 
 @bye
