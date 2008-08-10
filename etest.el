@@ -86,7 +86,6 @@
     equal   (etest-equal 2)
     eql     (etest-eql 2)
     ok      (etest-ok 1)
-    skip    (etest-skip 1)
     todo    (etest-todo 1))
   "Plist of test candidates where PROP is the name of the new
 test . See `deftest' for details of how to modify this.")
@@ -99,24 +98,16 @@ will be run."
     (plist-put etest-candidates-plist
                name (list func argcount))))
 
-(defun etest-skip-todo (form keyword)
+(defun etest-todo (form)
   "Return an etest result set with :result set to t. Set
-KEYWORD (usually todo or skip) to t and comments to the result."
+:todo to t and comments to the result of FORM."
   (let ((res (prin1-to-string
               (condition-case err (car (etest-run (list form)))
               (error
                err)))))
     (list :result t
           :comments (concat "got: " (replace-regexp-in-string "\n" "" res))
-          keyword t)))
-
-(defun etest-skip (form)
-  "Call `etest-skip-todo' with the keyword being :skip"
-  (etest-skip-todo form :skip))
-
-(defun etest-todo (form)
-  "Call `etest-skip-todo' with the keyword being :todo"
-  (etest-skip-todo form :todo))
+          :todo t)))
 
 (defun etest-ok (test)
   "Simply eval TEST and pass if the result is non-nil."
@@ -255,7 +246,7 @@ run (in ETest syntax) and RESULT is a plist of items you would
 like to compare. See the file etest.etest for example usage."
   (let* ((testres (car (etest-run (list test))))
          (my-res t)
-         (res-items '(:result :comments :doc :skip :todo))
+         (res-items '(:result :comments :doc :todo))
          (my-comments (mapconcat
                        '(lambda (item)
                          (format "%9S %S" item (plist-get testres item)))

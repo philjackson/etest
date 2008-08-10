@@ -461,9 +461,6 @@ Which in the results buffer produces:
 @node Leaving tests until later,  , Defining your own tests, The Tests
 @section Leaving tests until later
 
-It is possible to mark tests as skip or todo. Both essensially do the
-same thing.
-
 @subsection Todo tests
 
 If you wrap a test in a todo keyword:
@@ -475,19 +472,8 @@ If you wrap a test in a todo keyword:
 Then the test will appear to pass but with an extra keyword in the
 result (@code{:todo}) with the value @code{t}.
 
-The result mode takes account of this by highlighting todoed tests.
-
-@subsection Skip tests
-
-If you wrap a test in a todo keyword:
-
-@lisp
-(skip (ok nil))
-@end lisp
-
-Then the test will appear to pass but with an extra keyword in the
-result (@code{:skip}) with the value @code{t}.
-
-The result mode takes account of this by highlighting skipped tests.
+The result mode takes account of this by highlighting todoed tests and
+showing you what happened when ETest actually ran the test (catching
+all exceptions).
 
 @bye

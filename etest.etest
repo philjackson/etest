@@ -27,9 +27,6 @@
    ("noerror"
     (eres (noerror (+ 1 1)) (:result t))
     (eres (noerror (/ 1 0)) (:result nil))))
-  ("Skip"
-   (skip (ok 1))
-   (eres (skip (eq (/ 0 1) 1)) (:skip t :todo nil)))
   ("Todo"
    (todo (ok nil))
    (eres (todo (ok (/ 0 0))) (:todo t :skip nil)))

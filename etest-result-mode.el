@@ -47,14 +47,11 @@
 (defvar etest-rm-todo-re "^ *\\(todo\\) \\.\\."
   "Regexp that will match good test status.")
 
-(defvar etest-rm-skip-re "^ *\\(skip\\) \\.\\."
-  "Regexp that will match good test status.")
-
 (defvar etest-status-re
   (concat "\\(" etest-rm-not-ok-re
           "\\|" etest-rm-ok-re
           "\\|" etest-rm-todo-re
-          "\\|" etest-rm-skip-re "\\)")
+          "\\)")
       "Regexp that will match a test status.")
 
 (defvar etest-meta-info-re
@@ -141,7 +138,6 @@ current line."
            (comments (plist-get result :comments))
            (prefix (if returned
                        (cond
-                         ((plist-get result :skip) "skip")
                          ((plist-get result :todo) "todo")
                          (t "ok"))
                        "not ok")))
@@ -239,7 +235,6 @@ current line."
   `((,etest-rm-ok-re     1 etest-rm-ok-face)
     (,etest-rm-not-ok-re 1 etest-rm-not-ok-face)
     (,etest-rm-todo-re   1 etest-rm-not-ok-face)
-    (,etest-rm-skip-re   1 etest-rm-not-ok-face)
     (,etest-meta-info-re 1 etest-rm-heading-face)
     ("^ *\\(#.+\\)"      1 etest-rm-comment-face)
     ("^ *\\*+ \\(.+\\)"  1 etest-rm-heading-face)))
