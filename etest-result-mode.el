@@ -27,6 +27,10 @@
 
 (require 'outline)
 
+(eval-and-compile
+  (unless (fboundp 'declare-function)
+    (defmacro declare-function (&rest r))))
+
 (declare-function etest-resultp "etest")
 
 ;; calm down byte-compiler, you can have this one...
