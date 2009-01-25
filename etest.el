@@ -34,7 +34,7 @@
 ;; Then actually load etest.el:
 ;;
 ;; (require 'etest)
-;; 
+;;
 ;; Valid examples of etest usage might be:
 ;;
 ;; Checking (+ 1 1) yeilds a non-nil result:
@@ -42,11 +42,11 @@
 ;;
 ;; You can add an extra argument to the end of any test and it will be
 ;; used as the documentation string for the test:
-;; 
+;;
 ;; (etest '(ok (+ 1 1) "Check 1 + 1 yeilds non-nil"))
-;; 
+;;
 ;; If you omit this string then one will be generated for you.
-;; 
+;;
 ;; Checking (+ 1 1) yeilds 2:
 ;; (etest '(eq (+ 1 1) 2))
 ;;
@@ -59,16 +59,16 @@
 ;;
 ;; To define your own tests the `deftest' function should be used. For
 ;; example the following can (and is) used to test etest itself:
-;; 
+;;
 ;; (deftest '(eres 1)
 ;;     (lambda (test)
 ;;       (etest-ok
 ;;        (plist-get (car (etest-run (list test))) :result))))
 ;;
 ;; Used like this:
-;; 
+;;
 ;; (etest '(eres (ok t)))
-;; 
+;;
 ;; I can see if etests 'built-ins' are working.
 
 (require 'etest-result-mode)
@@ -240,7 +240,7 @@ similarly shaped set of results. "
 resuls in RESULT."
   (let ((type (if (plist-get result :result) :pass :fail)))
     (plist-put meta-info type (1+ (plist-get meta-info type)))))
-      
+
 ;; This is defined so that etest can test itself
 (defun etest-test-tests (test result)
   "This test is used to test ETest itself. TEST is the test to be
