@@ -208,7 +208,7 @@ results of the run."
 tests is concerned. Takes a valid etest form and will return a
 similarly shaped set of results. "
   (mapcar
-   '(lambda (test)
+   (lambda (test)
      (let ((name (car test)))
        (cond
          ((stringp name)
@@ -250,7 +250,7 @@ like to compare. See the file etest.etest for example usage."
          (my-res t)
          (res-items '(:result :comments :doc :todo))
          (my-comments (mapconcat
-                       '(lambda (item)
+                       (lambda (item)
                          (replace-regexp-in-string "\n" " "
                           (format "%9S %S"
                            item

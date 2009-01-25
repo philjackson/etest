@@ -49,7 +49,7 @@ named (to the buffer) file. Then looking in `default-directory'."
                   (name (concat
                          (file-name-sans-extension
                           (file-name-nondirectory buffer-file-name)) ".etest")))
-              (mapc '(lambda (d)
+              (mapc (lambda (d)
                       (let ((name (expand-file-name (concat d "/" name))))
                         (when (file-exists-p name)
                           (throw 'found name))))
