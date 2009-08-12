@@ -10,7 +10,7 @@
    (noerror (+ 1 1))
    (like "Hello" "^\\(H\\).+\\(o\\)$"))
   ("Results"
-   ("ok results"  
+   ("ok results"
     (eres (ok nil) (:result nil))
     (eres (ok t) (:result t))
     (eres (ok (+ 1 1)) (:result t))
@@ -46,4 +46,22 @@
    (eres (eq 1 1) (:comments "both: '1'")
          "eq hit")
    (eres (eq 1 2) (:comments "one: '1'\ntwo: '2'")
-         "eq miss"))))
+         "eq miss")))
+ ("Etest Execute"
+  (like   (let ((etest-file "etest.etest"))
+            (etest-execute-get-test-file))
+          (concat default-directory etest-file)
+          "`etest-file' being set returns a good path")
+  (like (let ((etest-file nil)
+              (etest-load-path (list default-directory)))
+          (etest-execute-get-test-file))
+        "/etest.etest$"
+        "Load path being set returns correct value")
+  (like (let ((etest-file nil)
+              (etest-load-path nil))
+          (etest-execute-get-test-file))
+        "/etest.etest$"
+        ".etest file found in the cwd.")
+  (error (let ((buffer-file-name "this-shouldnt-be"))
+           (etest-execute))
+         "`test-execute' throws an error when no file found.")))
