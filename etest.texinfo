@@ -55,19 +55,19 @@ small modular system for writing unit tests in Emacs Lisp.
 At time of writing ETest consists of two files. @file{etest.el}
 provides the core test functionality. It defines the function
 (actually, macro) @code{etest} which is usually one's entrance into a
-test run. The file @file{etest-result-mode.el} adds functions that
-allow the visualisation of a run with syntax highlighting, folding and
-comment toggling.
+test run. The etest-result-mode code adds functions that allow the
+visualisation of a run with syntax highlighting, folding and comment
+toggling.
 
 @node Fetching ETest, Installation, Introduction, Top
 @chapter Fetching ETest
 
 At the time of writing you must download ETest using git:
 
-@code{git clone http://repo.or.cz/r/ETest.git etest}
+@code{git clone git://github.com/philjackson/etest.git}
 
 Though it will always be bleeding edge @code{master} should always be
-in a @emph{working} state.
+in a @emph{working} state (and have passing tests).
 
 @node Installation, Usage, Fetching ETest, Top
 @chapter Installation
@@ -78,7 +78,7 @@ To install ETest use one of the following methods:
 
 Once you've fetched ETest change into the new directory and run
 @code{make} if all goes well run @code{make install} (you may need
-escalated privileges for this step).
+escalated privileges for the install).
 
 @section Manual Installation
 
@@ -144,9 +144,8 @@ directory as @code{find-cmd.el}) and then when I hit @kbd{C-c t} (in
 @code{emacs-lisp-mode}) the run would happen and the results pop up in
 their normal fashion.
 
-Thanks to @file{etest-execute.el} there are several options for the
-location of an etest file (one at a time). In order of execution they
-are:
+There are several options for the location of an etest file (one at a
+time). In order of execution they are:
 
 1. The buffer local variable @code{etest-file} is set to the filename
 of the etest file.
