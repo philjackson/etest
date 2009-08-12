@@ -73,7 +73,10 @@
 
 (require 'outline)
 
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl)
+  (defvar current-results)
+  (defvar current-meta-info))
 
 (defvar etest-results-function 'etest-rm-refresh-buffer
   "Function used to display the results of a run.")
