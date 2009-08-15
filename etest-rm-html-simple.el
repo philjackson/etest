@@ -19,7 +19,6 @@ and put into the filename of a test run.")
 (defun etest-rm-html-simple (results &optional meta-info)
   (set-buffer (get-buffer-create "*etest-simple-html-output*"))
   (erase-buffer)
-  (html-mode)
   (insert
    (xmlgen
     `(html
@@ -30,11 +29,30 @@ and put into the filename of a test run.")
        (meta :http-equiv "Content-Type"
              :content "text/html; charset=UTF-8"))
       (body
+       ,(etest-rm-html-meta-info meta-info)
        ,(etest-rm-html-heirarchy results 1)))))
   (write-file (concat etest-rm-html-output-dir
                       "/"
                       (format-time-string etest-rm-html-output-timestring)
                       etest-rm-html-output-extension)))
+
+(defun etest-rm-html-meta-info (meta-info)
+  (let* ((details
+          `(("total passed" . ,(number-to-string (plist-get meta-info :pass)))
+            ("total failed" . ,(number-to-string (plist-get meta-info :fail)))
+            ("time started" . ,(current-time-string
+                                (plist-get meta-info :timestart)))
+            ("time finished" . ,(current-time-string
+                                 (plist-get meta-info :timefinish))))))
+    (mapconcat
+     (lambda (item)
+       (xmlgen
+        `(div :class "meta"
+              (span :class "key" ,(car item))
+              ": "
+              (span :class "value" ,(cdr item)))))
+     details
+     "\n")))
 
 (defun etest-rm-html-result (result)
   "The pretty printing of a single test result. "
