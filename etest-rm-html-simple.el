@@ -3,6 +3,19 @@
 (setq etest-results-function
       'etest-rm-html-simple)
 
+(defvar etest-rm-html-stylesheet-name "file:///home/phil/style.css"
+  "filename of the linked stylesheet to use")
+
+(defvar etest-rm-html-output-dir "~/tmp"
+  "test results go here")
+
+(defvar etest-rm-html-output-timestring "%Y-%m-%d-%H-%M-%S"
+  "The format string which is resolved with `format-time-string'
+and put into the filename of a test run.")
+
+(defvar etest-rm-html-output-extension ".html"
+  "The filename extension for the filename of a test run")
+
 (defun etest-rm-html-simple (results &optional meta-info)
   (set-buffer (get-buffer-create "*etest-simple-html-output*"))
   (erase-buffer)
@@ -12,12 +25,16 @@
     `(html
       (head
        (link :rel "stylesheet"
-             :href "style.css"
+             :href ,etest-rm-html-stylesheet-name
              :type "text/css")
        (meta :http-equiv "Content-Type"
              :content "text/html; charset=UTF-8"))
       (body
-       ,(etest-rm-html-heirarchy results 1))))))
+       ,(etest-rm-html-heirarchy results 1)))))
+  (write-file (concat etest-rm-html-output-dir
+                      "/"
+                      (format-time-string etest-rm-html-output-timestring)
+                      etest-rm-html-output-extension)))
 
 (defun etest-rm-html-result (result)
   "The pretty printing of a single test result. "
@@ -27,27 +44,26 @@
          (class (if returned "pass" "fail")))
     (xmlgen
      `(div :class ,class
-       (div :class "result"
-        (div :class "doc" ,doc)
-        (div :class "comments"
-         (code ,comments)))))))
+           (div :class "result"
+                (div :class "doc" ,doc)
+                (div :class "comments"
+                     (code ,comments)))))))
 
 (defun etest-rm-html-heirarchy (results &optional level)
   (let ((level (or level 0)))
     (mapconcat
      (lambda (r)
        (cond
-         ((stringp r)
-          ;; yuck, all this to make a h1 .. h5 :/
-          (setq heading (if (< level 5) (number-to-string level) "5"))
-          (xmlgen (list (intern (concat "h" heading)) r)))
-         ((etest-resultp r)
-          (etest-rm-html-result r))
-         ((listp r)
-          (xmlgen `(div :class ,(concat "level-" (number-to-string level))
-                        ,(etest-rm-html-heirarchy r (1+ level)))))
-         (t
-          "\n")))
+        ((stringp r)
+         (setq heading (if (< level 5) (number-to-string level) "5"))
+         (xmlgen (list (intern (concat "h" heading)) r)))
+        ((etest-resultp r)
+         (etest-rm-html-result r))
+        ((listp r)
+         (xmlgen `(div :class ,(concat "level-" (number-to-string level))
+                       ,(etest-rm-html-heirarchy r (1+ level)))))
+        (t
+         "\n")))
      results
      "\n")))
 
