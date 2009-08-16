@@ -347,7 +347,6 @@ current line."
           (etest-rm-count-string-at-bol " ")
           (etest-rm-count-string-at-bol "*"))))
 
-;;;###autoload
 (defun etest-result-mode (&optional results meta-info)
   "Mode used to display test results."
   (interactive)
