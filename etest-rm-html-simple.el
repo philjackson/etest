@@ -30,7 +30,7 @@ and put into the filename of a test run.")
              :content "text/html; charset=UTF-8"))
       (body
        ,(etest-rm-html-meta-info meta-info)
-       ,(etest-rm-html-heirarchy results 1)))))
+       ,(etest-rm-html-hierarchy results 1)))))
   (write-file (concat etest-rm-html-output-dir
                       "/"
                       (format-time-string etest-rm-html-output-timestring)
@@ -67,7 +67,7 @@ and put into the filename of a test run.")
                 (div :class "comments"
                      (code ,comments)))))))
 
-(defun etest-rm-html-heirarchy (results &optional level)
+(defun etest-rm-html-hierarchy (results &optional level)
   (let ((level (or level 0)))
     (mapconcat
      (lambda (r)
@@ -79,7 +79,7 @@ and put into the filename of a test run.")
          (etest-rm-html-result r))
         ((listp r)
          (xmlgen `(div :class ,(concat "level-" (number-to-string level))
-                       ,(etest-rm-html-heirarchy r (1+ level)))))
+                       ,(etest-rm-html-hierarchy r (1+ level)))))
         (t
          "\n")))
      results
