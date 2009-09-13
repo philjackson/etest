@@ -294,13 +294,13 @@ like to compare. See the file etest.etest for example usage."
       "Regexp that will match a test status.")
 
 (defvar etest-meta-info-re
-  (concat "[[:blank:]]"
+  (concat "^[[:blank:]]"
           (regexp-opt '("total"
                         "pass"
                         "fail"
                         "started"
                         "finished") t)
-          "..\\{2,\\}[[:blank:]]+\\(.+\\)$")
+          "[[:blank:]]\\.\\{2,\\}[[:blank:]]+\\(.+\\)$")
   "Regexp that will match the stats at the bottom of the buffer.")
 
 (defvar etest-rm-map

@@ -11,41 +11,41 @@
    (like "Hello" "^\\(H\\).+\\(o\\)$"))
   ("Results"
    ("ok results"
-    (eres (ok nil) (:result nil) nil)
-    (eres (ok t) (:result t) nil)
-    (eres (ok (+ 1 1)) (:result t) nil)
-    (eres (ok 0) (:result t) nil))
+    (eres (ok nil) (:result nil))
+    (eres (ok t) (:result t))
+    (eres (ok (+ 1 1)) (:result t))
+    (eres (ok 0) (:result t)))
    ("eq results"
-    (eres (eq 1 1) (:result t) nil)
-    (eres (eq 1 2) (:result nil) nil))
+    (eres (eq 1 1) (:result t))
+    (eres (eq 1 2) (:result nil)))
    ("equal results"
-    (eres (equal '(1 2) '(1 2)) (:result t) nil)
-    (eres (equal '(1 2) '(3 4)) (:result nil) nil))
+    (eres (equal '(1 2) '(1 2)) (:result t))
+    (eres (equal '(1 2) '(3 4)) (:result nil)))
    ("error"
-    (eres (error (/ 1 0)) (:result t) nil)
-    (eres (error (/ 0 1)) (:result nil) nil))
+    (eres (error (/ 1 0)) (:result t))
+    (eres (error (/ 0 1)) (:result nil)))
    ("noerror"
-    (eres (noerror (+ 1 1)) (:result t) nil)
-    (eres (noerror (/ 1 0)) (:result nil) nil)))
+    (eres (noerror (+ 1 1)) (:result t))
+    (eres (noerror (/ 1 0)) (:result nil))))
   ("Todo"
    (todo (ok nil))
-   (eres (todo (ok (/ 0 0))) (:todo t :skip nil) nil))
+   (eres (todo (ok (/ 0 0))) (:todo t :skip nil)))
   ("Documentation"
    ("Defined by user"
-    (eres (ok 1 "Foo") (:doc "Foo") nil)
-    (eres (eq 1 1 "Another doc") (:doc "Another doc") nil))
+    (eres (ok 1 "Foo") (:doc "Foo"))
+    (eres (eq 1 1 "Another doc") (:doc "Another doc")))
    ("Auto generated"
-    (eres (ok 1) (:doc "(ok 1)") nil
+    (eres (ok 1) (:doc "(ok 1)")
           "Correct ok docs generated.")
-    (eres (eq 1 1) (:doc "(eq 1 1)") nil
+    (eres (eq 1 1) (:doc "(eq 1 1)")
           "Correct eq docs generated.")))
   ("Comments"
-   (eres (error (/ 1 0)) (:comments "got: '(arith-error)'") nil
+   (eres (error (/ 1 0)) (:comments "got: '(arith-error)'")
          "We get arith-error from a divide by 0")
-   (eres (ok "Something") (:comments "got: '\"Something\"'") nil)
-   (eres (eq 1 1) (:comments "both: '1'") nil
+   (eres (ok "Something") (:comments "got: '\"Something\"'"))
+   (eres (eq 1 1) (:comments "both: '1'")
          "eq hit")
-   (eres (eq 1 2) (:comments "one: '1'\ntwo: '2'") nil
+   (eres (eq 1 2) (:comments "one: '1'\ntwo: '2'")
          "eq miss")))
  ("Etest Execute"
   (like   (let ((etest-file "etest.etest"))
