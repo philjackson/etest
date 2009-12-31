@@ -15,6 +15,10 @@
     (eres (ok t) (:result t))
     (eres (ok (+ 1 1)) (:result t))
     (eres (ok 0) (:result t)))
+   ("require"
+    (require 'etest)
+    (eres (require 'shitfuck) (:result nil)
+          "A bad require fails as it should."))
    ("eq results"
     (eres (eq 1 1) (:result t))
     (eres (eq 1 2) (:result nil)))

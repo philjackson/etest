@@ -90,6 +90,7 @@
     equal   (etest-equal 2)
     eql     (etest-eql 2)
     ok      (etest-ok 1)
+    require (etest-require 1)
     todo    (etest-todo 1))
   "Plist of test candidates where PROP is the name of the new
 test . See `deftest' for details of how to modify this.")
@@ -101,6 +102,10 @@ will be run."
   (destructuring-bind (name argcount) details
     (plist-put etest-candidates-plist
                name (list func argcount))))
+
+(defun etest-require (pkg)
+  "Try to require PACKAGE pass if it works, fail if not."
+  (etest-noerror `(require ,pkg)))
 
 (defun etest-todo (form)
   "Return an etest result set with :result set to t. Set
