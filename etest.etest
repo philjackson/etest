@@ -2,7 +2,7 @@
  ("Etest"
   (require 'etest)
   ("Simple"
-   (ok 1)q
+   (ok 1)
    (null nil)
    (eq 1 1)
    (eql 1.1 1.1)
