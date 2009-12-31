@@ -1,11 +1,12 @@
 * Etest
 ** ETest
-*** TODO Allow skip/todo keywords
+*** DONE Allow skip/todo keywords
+    CLOSED: [2009-12-31 Thu 20:54]
 *** DONE Attach meta data
     CLOSED: [2008-08-10 Sun 17:30]
     - Pass/fail rate
     - How long the run took
-*** TODO Somesort of mock/stub intergration(?)
+*** PERHAPS Somesort of mock/stub intergration(?)
     - Perhas bundle el-mock
 *** DONE Make the function which presents the results customisable.    :ARCHIVE:
 ** Result Mode
