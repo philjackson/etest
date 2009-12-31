@@ -1,7 +1,8 @@
 (etest
  ("Etest"
+  (require 'etest)
   ("Simple"
-   (ok 1)
+   (ok 1)q
    (null nil)
    (eq 1 1)
    (eql 1.1 1.1)
@@ -16,8 +17,7 @@
     (eres (ok (+ 1 1)) (:result t))
     (eres (ok 0) (:result t)))
    ("require"
-    (require 'etest)
-    (eres (require 'shitfuck) (:result nil)
+    (eres (require 'somemadeuppackage) (:result nil)
           "A bad require fails as it should."))
    ("eq results"
     (eres (eq 1 1) (:result t))
