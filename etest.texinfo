@@ -308,6 +308,15 @@ non-nil or nil.
 @end lisp
 @noindent
 
+@subsection require
+
+This test will pass if the require statement... requires.
+
+@lisp
+(etest (require 'etest))
+@end lisp
+@noindent
+
 @node Builtin Equality Tests, Builtin Error Tests, Builtin Simple Tests, The Tests
 @section Builtin Equality Tests
 
